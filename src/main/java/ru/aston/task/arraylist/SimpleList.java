@@ -1,5 +1,7 @@
 package ru.aston.task.arraylist;
 
+import java.util.Comparator;
+
 /**
  * Интерфейс простого списка с основными операциями.
  *
@@ -55,7 +57,12 @@ public interface SimpleList<T> {
     int size();
 
     /**
-     * Сортирует список по возрастанию с использованием натурального порядка (natural ordering).
+     * Сортирует список по возрастанию.
      */
     void sort();
+
+    /**
+     * Сортирует список с использованием компаратора.
+     */
+    void sort(Comparator<? super T> comparator);
 }

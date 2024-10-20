@@ -1,5 +1,6 @@
 package ru.aston.task.arraylist;
 
+import java.util.Comparator;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -11,7 +12,7 @@ import java.util.Arrays;
  * @param <T> тип элементов в списке
  */
 public class SimpleArrayList<T> implements SimpleList<T> {
-    private Logger logger = Logger.getLogger(SimpleArrayList.class.getName());
+    private final Logger logger = Logger.getLogger(SimpleArrayList.class.getName());
     private int initialCapacity = 10;
     private int maxCapacity = Integer.MAX_VALUE;
     private T[] elements;
@@ -20,6 +21,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     /**
      * Конструктор по умолчанию, создающий список с начальной емкостью равной 10 элементам.
      */
+    @SuppressWarnings("unchecked")
     public SimpleArrayList() {
         this.elements = (T[]) new Object[initialCapacity];
         this.size = 0;
@@ -30,6 +32,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
      *
      * @param initialCapacity начальный размер массива
      */
+    @SuppressWarnings("unchecked")
     public SimpleArrayList(int initialCapacity) {
         this.elements = (T[]) new Object[initialCapacity];
         this.size = 0;
@@ -116,6 +119,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
      * Удаляет все элементы из списка.
      */
     @Override
+    @SuppressWarnings("unchecked")
     public void clear() {
         elements = (T[]) new Object[initialCapacity];
         size = 0;
@@ -132,9 +136,22 @@ public class SimpleArrayList<T> implements SimpleList<T> {
         return size;
     }
 
+    /**
+     * Сортирует список по возрастанию. Элементы "null" ставятся в начало списка.
+     */
     @Override
     public void sort() {
-        Arrays.sort(elements);
+        SortUtils.quickSort(elements, size);
+    }
+
+    /**
+     * Сортирует список с использованием компаратора.
+     *
+     * @param comparator компаратор
+     */
+    @Override
+    public void sort(Comparator<? super T> comparator) {
+        SortUtils.quickSort(elements, size, comparator);
     }
 
     private void checkIndexRange(int index) {

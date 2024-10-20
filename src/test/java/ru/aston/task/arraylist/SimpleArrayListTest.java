@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SimpleArrayListTest {
 
-
     @Test
     void shouldCreateEmptyList() {
         SimpleArrayList<Object> list = new SimpleArrayList<>();
@@ -92,6 +91,57 @@ class SimpleArrayListTest {
         list.clear();
 
         assertEquals(0, list.size());
+    }
+
+    @Test
+    void shouldSortList() {
+        SimpleArrayList<String> list = new SimpleArrayList<>();
+        list.add("D");
+        list.add(null);
+        list.add(null);
+        list.add("F");
+        list.add("C");
+
+        list.sort();
+
+        assertNull(list.get(0));
+        assertNull(list.get(1));
+        assertEquals("C", list.get(2));
+        assertEquals("D", list.get(3));
+        assertEquals("F", list.get(4));
+        assertEquals(5, list.size());
+    }
+
+    @Test
+    void shouldSortListWithNulls() {
+        SimpleArrayList<String> list = new SimpleArrayList<>();
+        list.add(null);
+        list.add(null);
+
+        list.sort();
+
+        assertNull(list.get(0));
+        assertNull(list.get(1));
+        assertEquals(2, list.size());
+    }
+
+    @Test
+    void shouldSortListWithComparator() {
+        SimpleArrayList<String> list = new SimpleArrayList<>();
+        list.add("D");
+        list.add("A");
+        list.add("B");
+        list.add("F");
+        list.add("C");
+
+        list.sort(String::compareTo);
+
+        assertEquals("A", list.get(0));
+        assertEquals("B", list.get(1));
+        assertEquals("C", list.get(2));
+        assertEquals("D", list.get(3));
+        assertEquals("F", list.get(4));
+        assertEquals(5, list.size());
     }
 
 }
