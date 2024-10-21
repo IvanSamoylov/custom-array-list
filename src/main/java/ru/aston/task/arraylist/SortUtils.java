@@ -22,7 +22,10 @@ public class SortUtils {
 
     private static <T> boolean isElementsComparable(T[] arrayToSort) {
         return arrayToSort != null && Arrays.stream(arrayToSort)
-                .anyMatch(t -> t instanceof Comparable);
+                .filter(Objects::nonNull)
+                .findAny()
+                .map( t -> t instanceof Comparable)
+                .orElse(false);
     }
 
     private static <T> void quickSort(T[] array, int low, int high) {

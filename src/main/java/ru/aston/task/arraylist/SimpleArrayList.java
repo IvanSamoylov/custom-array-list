@@ -13,10 +13,10 @@ import java.util.Arrays;
  */
 public class SimpleArrayList<T> implements SimpleList<T> {
     private final Logger logger = Logger.getLogger(SimpleArrayList.class.getName());
-    private int initialCapacity = 10;
-    private int maxCapacity = Integer.MAX_VALUE;
+    private final int initialCapacity = 10;
+    private final int maxCapacity = Integer.MAX_VALUE;
     private T[] elements;
-    private int size;
+    private int size = 0;
 
     /**
      * Конструктор по умолчанию, создающий список с начальной емкостью равной 10 элементам.
@@ -24,7 +24,6 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     @SuppressWarnings("unchecked")
     public SimpleArrayList() {
         this.elements = (T[]) new Object[initialCapacity];
-        this.size = 0;
     }
 
     /**
@@ -35,7 +34,6 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     @SuppressWarnings("unchecked")
     public SimpleArrayList(int initialCapacity) {
         this.elements = (T[]) new Object[initialCapacity];
-        this.size = 0;
     }
 
     /**
@@ -46,8 +44,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     @Override
     public void add(T element) {
         extendArrayIfRequired();
-        elements[size] = element;
-        size++;
+        elements[size++] = element;
     }
 
     /**
@@ -96,6 +93,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
      */
     @Override
     public T get(int index) {
+        checkIndexRange(index);
         return elements[index];
     }
 
@@ -161,15 +159,11 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     }
 
     private void moveElementsToRignt(int index) {
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
     }
 
     private void moveElementsToLeft(int index) {
-        for (int i = index; i < size; i++) {
-            elements[i] = elements[i + 1];
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
     }
 
 }
