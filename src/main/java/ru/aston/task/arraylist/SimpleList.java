@@ -1,5 +1,7 @@
 package ru.aston.task.arraylist;
 
+import java.util.Comparator;
+
 /**
  * Интерфейс простого списка с основными операциями.
  *
@@ -11,7 +13,6 @@ public interface SimpleList<T> {
      * Добавляет элемент в конец списка.
      *
      * @param element элемент для добавления
-     * @throws IndexOutOfBoundsException если текущий размер списка равен {@link Integer#MAX_VALUE}
      */
     void add(T element);
 
@@ -20,7 +21,7 @@ public interface SimpleList<T> {
      *
      * @param index   индекс, по которому элемент должен быть добавлен
      * @param element элемент для добавления
-     * @throws IndexOutOfBoundsException если индекс находится вне диапазона (index < 0 || index > size() || index > Integer.MAX_VALUE)
+     * @throws IndexOutOfBoundsException если индекс находится вне диапазона (index < 0 || index > size())
      */
     void add(int index, T element);
 
@@ -29,7 +30,7 @@ public interface SimpleList<T> {
      *
      * @param index индекс элемента для возврата
      * @return элемент по указанному индексу
-     * @throws IndexOutOfBoundsException если индекс находится вне диапазона (index < 0 || index >= size() || index > Integer.MAX_VALUE)
+     * @throws IndexOutOfBoundsException если индекс находится вне диапазона (index < 0 || index >= size())
      */
     T get(int index);
 
@@ -38,7 +39,7 @@ public interface SimpleList<T> {
      *
      * @param index индекс элемента для удаления
      * @return удаленный элемент
-     * @throws IndexOutOfBoundsException если индекс находится вне диапазона (index < 0 || index >= size() || index > Integer.MAX_VALUE)
+     * @throws IndexOutOfBoundsException если индекс находится вне диапазона (index < 0 || index >= size())
      */
     T remove(int index);
 
@@ -56,7 +57,12 @@ public interface SimpleList<T> {
     int size();
 
     /**
-     * Сортирует список по возрастанию с использованием натурального порядка (natural ordering).
+     * Сортирует список по возрастанию.
      */
     void sort();
+
+    /**
+     * Сортирует список с использованием компаратора.
+     */
+    void sort(Comparator<? super T> comparator);
 }
