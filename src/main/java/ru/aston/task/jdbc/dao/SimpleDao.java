@@ -131,7 +131,11 @@ public class SimpleDao<T> {
      * @throws SQLException исключение выбрасывается, если произошла ошибка доступа к данным
      */
     public Optional<T> findById(Class<T> clazz, Integer id) throws SQLException {
-        return findByField(clazz, "id", id);
+        List<T> models = findByField(clazz, "id", id);
+        if (models.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(models.getFirst());
     }
 
     /*
@@ -143,21 +147,22 @@ public class SimpleDao<T> {
      * @return возвращает класс в обертке Optional, либо Optiona.empty()
      * @throws SQLException исключение выбрасывается, если произошла ошибка доступа к данным
      */
-    private Optional<T> findByField(Class<T> clazz, String fieldName, Object fieldValue) throws SQLException {
+    public List<T> findByField(Class<T> clazz, String fieldName, Object fieldValue) throws SQLException {
         String fieldsToSearch = Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(OneToMany.class))
                 .map(Field::getName)
                 .collect(Collectors.joining(","));
 
         String selectBy = String.format(SELECT_FIELDS_BY_TEMPLATE, fieldsToSearch, clazz.getSimpleName(), fieldName);
+        List<T> models = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(selectBy)) {
             preparedStatement.setObject(1, fieldValue);
             ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                return Optional.of(createEntity(rs, clazz));
+            while (rs.next()) {
+                models.add(createEntity(rs, clazz));
             }
-            return Optional.empty();
+            return models;
         }
     }
 
@@ -186,8 +191,10 @@ public class SimpleDao<T> {
             Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
             T entity = constructor.newInstance();
-
-            for (Field field : clazz.getDeclaredFields()) {
+            List<Field> fields = Arrays.stream(clazz.getDeclaredFields())
+                    .filter(field -> !field.isAnnotationPresent(OneToMany.class))
+                    .toList();
+            for (Field field : fields) {
                 field.setAccessible(true);
                 String columnName = field.getName();
                 Object value = rs.getObject(columnName);

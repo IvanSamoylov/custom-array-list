@@ -87,7 +87,7 @@ class SimpleDaoTest {
         ResultSet resultSet = mock(ResultSet.class);
         when(mockPreparedStatement.executeQuery()).thenReturn(resultSet);
 
-        when(resultSet.next()).thenReturn(true);
+        when(resultSet.next()).thenReturn(true, false);
         when(resultSet.getObject(FIELD_ID)).thenReturn(TEST_ID);
         when(resultSet.getObject(FILED_CODE)).thenReturn(TEST_CODE);
         when(resultSet.getObject(FIELD_NAME)).thenReturn(TEST_NAME);

@@ -21,18 +21,18 @@ CREATE TABLE "Product"
 
 CREATE TABLE IF NOT EXISTS "Order" (
    id INT AUTO_INCREMENT PRIMARY KEY,
-   customer_id INT,
-   FOREIGN KEY (customer_id) REFERENCES "Customer"(id) ON DELETE SET NULL
+   customerId INT,
+   FOREIGN KEY (customerId) REFERENCES "Customer"(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS "OrderEntry" (
      id INT AUTO_INCREMENT PRIMARY KEY,
-     order_id INT,
-     product_id INT,
+     orderId INT,
+     productId INT,
      quantity INT NOT NULL,
-     price DOUBLE NOT NULL,
-     FOREIGN KEY (order_id) REFERENCES "Order"(id) ON DELETE CASCADE,
-     FOREIGN KEY (product_id) REFERENCES "Product"(id) ON DELETE CASCADE
+     price DECIMAL NOT NULL,
+     FOREIGN KEY (orderId) REFERENCES "Order"(id) ON DELETE CASCADE,
+     FOREIGN KEY (productId) REFERENCES "Product"(id) ON DELETE CASCADE
     );
 
 INSERT INTO "Product"(code, name, price)
@@ -46,3 +46,13 @@ VALUES ('T001', 'Chocolate Cake', 20.50),
 INSERT INTO "Customer"(name, address)
 VALUES ('vanya','Chelaybinsk'),
        ('aston','Ekaterinburg');
+
+--
+INSERT INTO "Order" (customerId) VALUES (1);
+INSERT INTO "Order" (customerId) VALUES (2);
+
+INSERT INTO "OrderEntry" (orderId, productId, quantity, price) VALUES (1, 1, 2, 100.0);
+INSERT INTO "OrderEntry" (orderId, productId, quantity, price) VALUES (1, 2, 1, 200.0);
+
+INSERT INTO "OrderEntry" (orderId, productId, quantity, price) VALUES (2, 1, 3, 100.0);
+INSERT INTO "OrderEntry" (orderId, productId, quantity, price) VALUES (2, 2, 2, 200.0);
