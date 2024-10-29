@@ -12,7 +12,7 @@ public class Order {
     @OneToMany("OrderEntry")
     private List<OrderEntry> orderEntries;
 
-    private Order() {
+    public Order() {
     }
 
     public Order(int id, int customerId, List<OrderEntry> orderEntries) {

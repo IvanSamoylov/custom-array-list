@@ -1,6 +1,5 @@
 package ru.aston.task.jdbc.dao;
 
-import ru.aston.task.jdbc.DatabaseConnectionProvider;
 import ru.aston.task.jdbc.models.Order;
 import ru.aston.task.jdbc.models.OrderEntry;
 
@@ -88,6 +87,7 @@ public class OrderDAO extends SimpleDao<Order> {
 
     /**
      * Обновление заказа. Позиции заказа удаляются и снова создаются.
+     *
      * @param order класс для обновления в БД
      * @throws SQLException если произошла ошибка базы данных
      */
@@ -131,6 +131,7 @@ public class OrderDAO extends SimpleDao<Order> {
 
     /**
      * Находит все заказы. Для каждой позиции в заказе создается отдельный запрос.
+     *
      * @param clazz класс заказа
      * @return список найденных заказов
      * @throws SQLException если произошла ошибка базы данных
@@ -142,27 +143,7 @@ public class OrderDAO extends SimpleDao<Order> {
             List<OrderEntry> entries = orderEntryDAO.findByField(OrderEntry.class, "orderId", order.getId());
             order.setOrderEntries(entries);
         }
-
         return orders;
-    }
-
-    public static void main(String[] args) throws SQLException {
-        DataSource dataSource = DatabaseConnectionProvider.getInstance().getDataSource();
-        OrderEntryDAO orderEntryDAO = new OrderEntryDAO(dataSource);
-        OrderDAO orderDAO = new OrderDAO(dataSource, orderEntryDAO);
-        for (Order order : orderDAO.selectAll(Order.class)) {
-            System.out.println(order);
-        }
-        Optional<Order> order = orderDAO.findById(Order.class, 1);
-        System.out.println("Order found: " + order.get().getId());
-        orderDAO.insert(order.get());
-        for (OrderEntry entry : order.get().getOrderEntries()) {
-            double price = entry.getPrice();
-            entry.setPrice(price * 2);
-        }
-        orderDAO.update(order.get());
-        orderDAO.delete(Order.class, order.get().getId());
-
     }
 }
 
